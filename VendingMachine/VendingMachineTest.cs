@@ -6,8 +6,8 @@ namespace VendingMachine
     {
         static void Main()
         {
-            VendingMachine myNewMachine = new VendingMachine();
-            Console.WriteLine("Hello World!");
+            // Discard operation since var does not to be used at a later point
+            _ = new VendingMachine();
         }
     }
 }

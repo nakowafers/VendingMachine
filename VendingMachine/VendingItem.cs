@@ -19,7 +19,7 @@ namespace VendingMachine
             private set;
         }
 
-        public VendingItem(string name, int cost, int quantity)
+        public VendingItem(string name, double cost, int quantity)
         {
             Name = name;
             Cost = cost;
@@ -36,7 +36,7 @@ namespace VendingMachine
             }
             else
             {
-
+                Console.WriteLine("None of that item left, Please choose another!");
             }
         }
 
