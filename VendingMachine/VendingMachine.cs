@@ -54,16 +54,13 @@ namespace VendingMachine
             }
         }
 
+        // return error message here?
         private bool IsValidCurrency(double input) => _allowedCurrencies.Contains(input);
 
 
         public void ResetVendingMachine()
         {
-            foreach (var item in _vendingItems)
-            {
-                item.Reset();
-            }
-
+            _vendingItems.ForEach(delegate (VendingItem item) { item.Reset(); });
         }
 
         private void PrintVendingDisplay()
