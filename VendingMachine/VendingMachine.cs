@@ -6,14 +6,17 @@ namespace VendingMachine
 {
     public class VendingMachine
     {
+
+        // IMPROVEMENT: store in database table?
+        // IMPROVEMENT: add by UI that checks for existing vending code / item
         private List<VendingItem> _vendingItems = new List<VendingItem>()
         {
-            new VendingItem("candy", 0.10, 100),
-            new VendingItem("snack", 0.50, 100),
-            new VendingItem("nuts", 0.90, 100),
-            new VendingItem("Coke", 0.25, 100),
-            new VendingItem("Pepsi", 0.35, 100),
-            new VendingItem("Gingerale", 0.45, 100)
+            new VendingItem("candy", 0.10, 100, "A"),
+            new VendingItem("snack", 0.50, 100, "B"),
+            new VendingItem("nuts", 0.90, 100, "C"),
+            new VendingItem("Coke", 0.25, 100, "D"),
+            new VendingItem("Pepsi", 0.35, 100, "E"),
+            new VendingItem("Gingerale", 0.45, 100, "F")
         };
 
         private List<double> _allowedCurrencies = new List<double>()

@@ -8,23 +8,20 @@ namespace VendingMachine
     /// </summary>
     public class VendingItem
     {
-        private int _startingQuantity;
+        private readonly int _startingQuantity;
         public string Name { get; }
         public double Cost { get; }
-        public int Quantity
-        {
-            get;
+        public int Quantity { get; private set; }
+        public string VendingCode { get; }
 
-            // prevent quantity from be overwritten outside of object
-            private set;
-        }
 
-        public VendingItem(string name, double cost, int quantity)
+        public VendingItem(string name, double cost, int quantity, string vendingCode)
         {
             Name = name;
             Cost = cost;
             Quantity = quantity;
             _startingQuantity = quantity;
+            VendingCode = vendingCode;
         }
 
         public void Dispense()

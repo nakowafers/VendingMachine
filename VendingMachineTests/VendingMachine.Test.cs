@@ -14,7 +14,7 @@ namespace VendingMachineTests
         public void VendingItem_CreatesItem_ResultsExpectedProperties()
         {
             // Arrange
-            VendingItem popTarts = new VendingItem("PopTarts", 0.35, 100);
+            VendingItem popTarts = new VendingItem("PopTarts", 0.35, 100, "A");
 
             // Act
             string name = popTarts.Name;
