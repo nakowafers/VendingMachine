@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace VendingMachine
 {
     public class VendingMachine
     {
-
         // IMPROVEMENT: store in database table?
-        // IMPROVEMENT: add by UI that checks for existing vending code / item
+        // IMPROVEMENT: make db table vending code column unique as constraint
+        // IMPROVEMENT: add UI for vending itmes, and for maitenance menu to add items or reset
+        // IMPROVEMENT: track transactions in db
+        // IMPROVEMENT: 
         private List<VendingItem> _vendingItems = new List<VendingItem>()
         {
             new VendingItem("candy", 0.10, 100, "A"),
@@ -33,23 +36,39 @@ namespace VendingMachine
 
         public VendingMachine()
         {
-            PrintVendingDisplay();
-
-            Run(Console.ReadLine());
+            Run();
         }
 
-        private void Run(string input)
+        // All methods private b/c vending machine is self contained as of now
+        private void Run()
         {
-            while (input != "x")
+            PrintVendingDisplay();
+            string input = Console.ReadLine();
+
+            while (true)
             {
-                // Check if input is double then currency
-                if (double.TryParse(input, out double value) && IsValidCurrency(value))
+                // is input a double 
+                if (double.TryParse(input, out double result))
                 {
-                    _moneySessionTotal += value;
+                    InsertMoneyUpdateTotal(result);
+                }
+                // is input an existing vending code
+                else if (_vendingItems.Exists(x => x.VendingCode.Equals(input)))
+                {
+                    Vend(input);
+                }
+                // check if want refund and if money left
+                else if (input == "X" && _moneySessionTotal != 0)
+                {
+                    Refund();
+                }
+                else if (input.ToUpper() == "RESET")
+                {
+                    ResetVendingMachine();
                 }
                 else
                 {
-                    Console.WriteLine("INVALID CURRENCY");
+                    Console.WriteLine("Invalid Command");
                 }
 
                 PrintVendingDisplay();
@@ -57,12 +76,47 @@ namespace VendingMachine
             }
         }
 
-        // return error message here?
-        private bool IsValidCurrency(double input) => _allowedCurrencies.Contains(input);
-
-
-        public void ResetVendingMachine()
+        private void Vend(string input)
         {
+            VendingItem itemToDispense = _vendingItems.Find(x => x.VendingCode.Equals(input));
+
+            // check if enough funds
+            if (itemToDispense.Cost > _moneySessionTotal)
+            {
+                Console.WriteLine("Not enough Funds");
+                return;
+            }
+
+            // try to dispense
+            if (itemToDispense.Dispense())
+            {
+                Console.WriteLine($"Dispensing {itemToDispense.Name}");
+                _moneySessionTotal -= itemToDispense.Cost;
+            }
+        }
+
+        private void Refund()
+        {
+            Console.WriteLine($"Refunding {_moneySessionTotal.ToString("C")}");
+            _moneySessionTotal = 0;
+        }
+
+        private void InsertMoneyUpdateTotal(double input)
+        {
+            // check if double currency value is in allowed list
+            if (_allowedCurrencies.Contains(input))
+            {
+                _moneySessionTotal += input;
+            }
+            else
+            {
+                Console.WriteLine("Currency Not Accepted!");
+            }
+        }
+
+        private void ResetVendingMachine()
+        {
+            Console.WriteLine("Resetting Vending Machine");
             _vendingItems.ForEach(delegate (VendingItem item) { item.Reset(); });
         }
 
@@ -72,11 +126,11 @@ namespace VendingMachine
 
             foreach (var item in _vendingItems)
             {
-                string value = $"{item.Name} @ {item.Cost.ToString("C")}, {item.Quantity} Remaining";
+                string value = $"{item.VendingCode}: {item.Name} @ {item.Cost.ToString("C")}, {item.Quantity} Remaining";
                 Console.WriteLine(value);
             }
-            Console.WriteLine($"Current Money in Macine is: {_moneySessionTotal}");
-            Console.WriteLine("Enter money or code to vend.");
+            Console.WriteLine($"Current Money in Machine is: {_moneySessionTotal.ToString("C")}");
+            Console.WriteLine("Enter money or code to vend. Enter X to Cancel Transaction.");
         }
     }
 }

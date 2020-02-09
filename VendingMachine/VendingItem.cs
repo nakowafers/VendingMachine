@@ -2,10 +2,6 @@
 namespace VendingMachine
 {
 
-    /// <summary>
-    /// private set; lookup
-    /// 
-    /// </summary>
     public class VendingItem
     {
         private readonly int _startingQuantity;
@@ -24,16 +20,19 @@ namespace VendingMachine
             VendingCode = vendingCode;
         }
 
-        public void Dispense()
+        // return bool to know if dispense was successful or not based on quantity
+        public bool Dispense()
         {
             // Check if any of item remaining before dispensing
             if (Quantity > 0)
             {
                 Quantity--;
+                return true;
             }
             else
             {
                 Console.WriteLine("None of that item left, Please choose another!");
+                return false;
             }
         }
 
