@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Runtime.Intrinsics.X86;
 
 namespace VendingMachine
 {
@@ -19,7 +20,8 @@ namespace VendingMachine
             new VendingItem("nuts", 0.90, 100, "C"),
             new VendingItem("Coke", 0.25, 100, "D"),
             new VendingItem("Pepsi", 0.35, 100, "E"),
-            new VendingItem("Gingerale", 0.45, 100, "F")
+            new VendingItem("Gingerale", 0.45, 100, "F"),
+            new VendingItem("PopTarts", 1.50, 10, "G")
         };
 
         private List<double> _allowedCurrencies = new List<double>()
@@ -58,7 +60,7 @@ namespace VendingMachine
                     Vend(input);
                 }
                 // check if want refund and if money left
-                else if (input == "X" && _moneySessionTotal != 0)
+                else if (input.ToUpper() == "X")
                 {
                     Refund();
                 }
@@ -97,8 +99,11 @@ namespace VendingMachine
 
         private void Refund()
         {
-            Console.WriteLine($"Refunding {_moneySessionTotal.ToString("C")}");
-            _moneySessionTotal = 0;
+            if (_moneySessionTotal != 0)
+            {
+                Console.WriteLine($"Refunding {_moneySessionTotal.ToString("C")}");
+                _moneySessionTotal = 0;
+            }
         }
 
         private void InsertMoneyUpdateTotal(double input)
