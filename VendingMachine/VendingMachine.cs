@@ -44,11 +44,13 @@ namespace VendingMachine
         // All methods private b/c vending machine is self contained as of now
         private void Run()
         {
-            PrintVendingDisplay();
-            string input = Console.ReadLine();
+            string input;
 
             while (true)
             {
+                PrintVendingDisplay();
+                input = Console.ReadLine().ToUpper(); // non case sensitive
+
                 // is input a double 
                 if (double.TryParse(input, out double result))
                 {
@@ -60,21 +62,18 @@ namespace VendingMachine
                     Vend(input);
                 }
                 // check if want refund and if money left
-                else if (input.ToUpper() == "X")
+                else if (input == "X")
                 {
                     Refund();
                 }
-                else if (input.ToUpper() == "RESET")
+                else if (input == "RESET")
                 {
-                    ResetVendingMachine();
+                    ResetVendingMachineInventory();
                 }
                 else
                 {
                     Console.WriteLine("Invalid Command");
                 }
-
-                PrintVendingDisplay();
-                input = Console.ReadLine();
             }
         }
 
@@ -92,8 +91,9 @@ namespace VendingMachine
             // try to dispense
             if (itemToDispense.Dispense())
             {
-                Console.WriteLine($"Dispensing {itemToDispense.Name}");
-                _moneySessionTotal -= itemToDispense.Cost;
+                double remainingChange = _moneySessionTotal - itemToDispense.Cost;
+                _moneySessionTotal = 0;
+                Console.WriteLine($"Dispensing {itemToDispense.Name} and Refunding {remainingChange.ToString("C")}");
             }
         }
 
@@ -119,7 +119,7 @@ namespace VendingMachine
             }
         }
 
-        private void ResetVendingMachine()
+        private void ResetVendingMachineInventory()
         {
             Console.WriteLine("Resetting Vending Machine");
             _vendingItems.ForEach(delegate (VendingItem item) { item.Reset(); });
@@ -131,7 +131,7 @@ namespace VendingMachine
 
             foreach (var item in _vendingItems)
             {
-                string value = $"{item.VendingCode}: {item.Name} @ {item.Cost.ToString("C")}, {item.Quantity} Remaining";
+                string value = $"{item.VendingCode}: {item.Name,-10} @ {item.Cost.ToString("C")}, {item.Quantity} Remaining";
                 Console.WriteLine(value);
             }
             Console.WriteLine($"Current Money in Machine is: {_moneySessionTotal.ToString("C")}");
