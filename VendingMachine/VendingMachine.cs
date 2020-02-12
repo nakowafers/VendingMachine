@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Runtime.Intrinsics.X86;
 
 namespace VendingMachine
 {
@@ -12,7 +9,8 @@ namespace VendingMachine
         // IMPROVEMENT: make db table vending code column unique as constraint
         // IMPROVEMENT: add UI for vending itmes, and for maitenance menu to add items or reset
         // IMPROVEMENT: track transactions in db
-        // IMPROVEMENT: 
+        // IMPROVEMENT: add password for supplier reset
+        // IMPROVEMENT: add menu for adding or removing vending categories as supplier
         private List<VendingItem> _vendingItems = new List<VendingItem>()
         {
             new VendingItem("candy", 0.10, 100, "A"),
@@ -34,6 +32,7 @@ namespace VendingMachine
             2.00
         };
 
+        // current money total in vending machine
         private double _moneySessionTotal = 0.0;
 
         public VendingMachine()
@@ -91,6 +90,7 @@ namespace VendingMachine
             // try to dispense
             if (itemToDispense.Dispense())
             {
+                // return remaining chance
                 double remainingChange = _moneySessionTotal - itemToDispense.Cost;
                 _moneySessionTotal = 0;
                 Console.WriteLine($"Dispensing {itemToDispense.Name} and Refunding {remainingChange.ToString("C")}");

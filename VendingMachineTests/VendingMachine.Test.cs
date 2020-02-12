@@ -25,5 +25,21 @@ namespace VendingMachineTests
             // Assert
             Assert.That(result, Is.EqualTo("PopTarts is 0.35 and there is a total of 100"));
         }
+
+        [Test]
+        public void VendingItem_TryDispensePastZero_ReturnsErrorAndDoesntUpdateQuantity()
+        {
+            // Arrange
+            VendingItem hotPockets = new VendingItem("HotPockets", 1.25, 1, "A");
+
+            // Act
+            hotPockets.Dispense();
+            hotPockets.Dispense();
+            hotPockets.Dispense();
+
+            // Assert
+            Assert.That(hotPockets.Quantity, Is.EqualTo(0));
+
+        }
     }
 }
