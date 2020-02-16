@@ -8,7 +8,7 @@ namespace VendingMachine
         // IMPROVEMENT: store in database table?
         // IMPROVEMENT: make db table vending code column unique as constraint
         // IMPROVEMENT: add UI for vending itmes, and for maitenance menu to add items or reset
-        // IMPROVEMENT: track transactions in db
+        // IMPROVEMENT: track transactions in db, to be able to audit for the future
         // IMPROVEMENT: add password for supplier reset
         // IMPROVEMENT: add menu for adding or removing vending categories as supplier
         private List<VendingItem> _vendingItems = new List<VendingItem>()
